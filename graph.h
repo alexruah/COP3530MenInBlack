@@ -1,0 +1,8 @@
+//
+// Created by alex ruah on 12/3/23.
+//
+
+#ifndef COP3530MENINBLACK_GRAPH_H
+#define COP3530MENINBLACK_GRAPH_H
+
+#endif //COP3530MENINBLACK_GRAPH_H
