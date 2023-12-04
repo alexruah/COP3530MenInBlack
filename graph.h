@@ -11,6 +11,12 @@
 #include <set>
 #include <iostream>
 
+struct Node{
+    std::pair<double, double> cords;
+
+    int count;
+};
+
 class Graph{
     std::map<std::pair<double, double>, std::vector<std::pair<double, double>>> adjList;
 public:

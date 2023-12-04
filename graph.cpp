@@ -17,11 +17,18 @@ Graph::Graph(std::vector<std::vector<std::string>> abductionList) {
         for (auto node : adjList) {
             auto nodeCords = node.first;
 
+            if (nodeCords == cords) {
+                adjList[node.first].push_back(cords);
+                break;
+            }
+
             if (cords.first-1 <= nodeCords.first && nodeCords.first <= cords.first+1 &&
             cords.second-1 <= nodeCords.second && nodeCords.second <= cords.second+1) {
                 adjList[node.first].push_back(cords);
                 neighbors.emplace_back(nodeCords);
             }
+
+            if (nodeCords.first > cords.first+1) break;
         }
 
         pair<pair<double, double>, vector<pair<double, double>>> toAdd = {cords, neighbors};
