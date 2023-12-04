@@ -63,7 +63,7 @@ int main(){
 
         while (std::getline(csvStream, line)) {
 
-            if (buffer != 0) {
+            if (buffer == -1) {
                 buffer = 0;
                 continue;
             }
@@ -85,9 +85,11 @@ int main(){
             if (row[0] == "NA" or row[1] == "NA") continue;
 
             data.push_back(row);
+
         }
 
         Graph* myGraph = new Graph(data);
+
     }
 
     curl_global_cleanup();
