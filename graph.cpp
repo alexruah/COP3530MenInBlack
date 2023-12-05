@@ -7,7 +7,12 @@
 using namespace std;
 
 Graph::Graph(std::vector<std::vector<std::string>> abductionList) {
+    // This method goes through every alien and bigfoot incident and creates a graph where each incident points to
+    // other incidents in the same area
+
     for (int i = 0; i < abductionList.size(); i++) {
+
+        // Creates a pair of coordinates for each incident
         pair<double, double> cords;
         cords.first = stod(abductionList[i][0]);
         cords.second = stod(abductionList[i][1]);
@@ -22,11 +27,15 @@ Graph::Graph(std::vector<std::vector<std::string>> abductionList) {
                 continue;
             }
 
+            // If the coordinates are in the same area make them point to each other
             if (cords.first-0.5 <= nodeCords.first && nodeCords.first <= cords.first+0.5 &&
             cords.second-0.5 <= nodeCords.second && nodeCords.second <= cords.second+0.5) {
                 adjList[node.first].push_back(cords);
-                neighbors.emplace_back(nodeCords);
+                neighbors.push_back(nodeCords);
             }
+
+            // Since the map is ordered by latitude, if the latitude is much smaller than the current incident's
+            // latitude it won't be in the area of any following incident
 
             if (nodeCords.first > cords.first+1) break;
         }
@@ -37,21 +46,29 @@ Graph::Graph(std::vector<std::vector<std::string>> abductionList) {
 }
 
 
-std::vector<std::pair<double, double>> Graph::getAbductionCount(std::pair<double, double> cords) {
-    std::vector<std::pair<double, double>> abductionsInArea;
+int Graph::getAbductionCount(std::pair<double, double> cords) {
+    // This method goes through every incident and if it finds an incident in the area of the user
+    // It then only has to check the incidents it's adjacent to, to find the rest of the incidents
+
+
+    int res;
 
 
     for (auto node : adjList) {
         auto nodeCords = node.first;
 
         if (nodeCords.first >= cords.first - 0.25 && nodeCords.first <= cords.first + 0.25 &&
-                nodeCords.second >= cords.second - 0.5 && nodeCords.second <= cords.second + 0.5) {
+                nodeCords.second >= cords.second - 0.25 && nodeCords.second <= cords.second + 0.25) {
+
+            // If there is an incident in the area of the user check it's adjacent incidents
+
+            res++;
 
             for (auto abduction : node.second) {
                 if (abduction.first >= cords.first - 0.25 && abduction.first <= cords.first + 0.25 &&
                     abduction.second >= cords.second - 0.25 && abduction.second <= cords.second + 0.25) {
 
-                    abductionsInArea.push_back(abduction);
+                    res++;
                 }
             }
 
@@ -60,6 +77,6 @@ std::vector<std::pair<double, double>> Graph::getAbductionCount(std::pair<double
 
     }
 
-    return abductionsInArea;
+    return res;
 }
 

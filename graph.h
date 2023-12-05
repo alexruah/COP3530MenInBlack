@@ -23,7 +23,7 @@ public:
 
     Graph(std::vector<std::vector<std::string>> abductionList);
 
-    std::vector<std::pair<double, double>> getAbductionCount(std::pair<double, double> cords);
+    int getAbductionCount(std::pair<double, double> cords);
 
 };
 
