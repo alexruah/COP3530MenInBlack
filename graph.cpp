@@ -19,11 +19,11 @@ Graph::Graph(std::vector<std::vector<std::string>> abductionList) {
 
             if (nodeCords == cords) {
                 adjList[node.first].push_back(cords);
-                break;
+                continue;
             }
 
-            if (cords.first-1 <= nodeCords.first && nodeCords.first <= cords.first+1 &&
-            cords.second-1 <= nodeCords.second && nodeCords.second <= cords.second+1) {
+            if (cords.first-0.5 <= nodeCords.first && nodeCords.first <= cords.first+0.5 &&
+            cords.second-0.5 <= nodeCords.second && nodeCords.second <= cords.second+0.5) {
                 adjList[node.first].push_back(cords);
                 neighbors.emplace_back(nodeCords);
             }
@@ -44,12 +44,12 @@ std::vector<std::pair<double, double>> Graph::getAbductionCount(std::pair<double
     for (auto node : adjList) {
         auto nodeCords = node.first;
 
-        if (nodeCords.first >= cords.first - 0.5 && nodeCords.first <= cords.first + 0.5 &&
+        if (nodeCords.first >= cords.first - 0.25 && nodeCords.first <= cords.first + 0.25 &&
                 nodeCords.second >= cords.second - 0.5 && nodeCords.second <= cords.second + 0.5) {
 
             for (auto abduction : node.second) {
-                if (abduction.first >= cords.first - 0.5 && abduction.first <= cords.first + 0.5 &&
-                    abduction.second >= cords.second - 0.5 && abduction.second <= cords.second + 0.5) {
+                if (abduction.first >= cords.first - 0.25 && abduction.first <= cords.first + 0.25 &&
+                    abduction.second >= cords.second - 0.25 && abduction.second <= cords.second + 0.25) {
 
                     abductionsInArea.push_back(abduction);
                 }
