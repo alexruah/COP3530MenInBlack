@@ -64,40 +64,40 @@ int main(){
         std::vector<std::vector<std::string>> data;
 
         std::string line;
+//        int buffer = -1;
+//
+//        while (std::getline(csvStream, line)) {
+//
+//            if (buffer == -1) {
+//                buffer = 0;
+//                continue;
+//            }
+//
+//            if (buffer == 20000) break;
+//
+//            std::vector<std::string> row;
+//            std::stringstream ss(line);
+//            std::string cell;
+//
+//            int index = 0;
+//
+//            while (std::getline(ss, cell, ',')) {
+//                if (index >= 9) {
+//                    row.push_back(cell);
+//                }
+//
+//                index++;
+//            }
+//
+//            if (row[0] == "NA" or row[1] == "NA") continue;
+//
+//            data.push_back(row);
+//
+//            buffer++;
+//
+//        }
+
         int buffer = -1;
-
-        while (std::getline(csvStream, line)) {
-
-            if (buffer == -1) {
-                buffer = 0;
-                continue;
-            }
-
-            if (buffer == 20000) break;
-
-            std::vector<std::string> row;
-            std::stringstream ss(line);
-            std::string cell;
-
-            int index = 0;
-
-            while (std::getline(ss, cell, ',')) {
-                if (index >= 9) {
-                    row.push_back(cell);
-                }
-
-                index++;
-            }
-
-            if (row[0] == "NA" or row[1] == "NA") continue;
-
-            data.push_back(row);
-
-            buffer++;
-
-        }
-
-        buffer = -1;
 
 
         while (std::getline(bigfootData, line)) {
@@ -123,8 +123,25 @@ int main(){
                 index ++;
             }
 
+            try {
+                double t = stod(row[0]);
+                double t2 = stod(row[1]);
+
+                if (t == 2004 || t2 == 2004) continue;
+            }
+            catch(const invalid_argument& e) {
+                continue;
+            }
+            catch(const out_of_range& e) {
+                continue;
+            }
+
             data.push_back(row);
         }
+
+
+        Graph* myg = new Graph(data);
+        int ghjd = 0;
 
 //        std::cout << data[1].size() << std::endl;
 //        MyKDTree* KD = new MyKDTree(data);
