@@ -1,16 +1,20 @@
 //
 // Created by alex ruah on 12/3/23.
 //
+//
+// Created by alex ruah on 12/3/23.
+//
 #include <iostream>
 #include <fstream>
 #include <curl/curl.h>
 #include <string>
 #include <vector>
 #include <sstream>
-#include <chrono>
+#include <SFML/Graphics.hpp>
+#include "my_kd_tree.h"
 
 #include "graph.h"
-
+using namespace sf;
 using namespace std;
 
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* data) {
@@ -30,10 +34,10 @@ int main(){
         // Specify the URL to download
         const char *abductionDataUrl = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-25/ufo_sightings.csv";
 
+        string bigfootDataFile = "/Users/alexruah/Downloads/bfro-report-locations.csv";
+        std::ifstream bigfootData(bigfootDataFile);
+
         std::string abductionData;
-
-
-
 
         // Set the URL to download
         curl_easy_setopt(curl, CURLOPT_URL, abductionDataUrl);
@@ -93,64 +97,114 @@ int main(){
 
         }
 
-        Graph* myGraph = new Graph(data);
+        buffer = -1;
 
-        int f = -1;
 
-        bool flag = true;
+        while (std::getline(bigfootData, line)) {
 
-        cout << "Monsters vs Aliens!!!!!!" << "\n\n";
+            if (buffer == -1) {
+                buffer = 0;
+                continue;
+            }
 
-        while (flag) {
-            cout << "Welcome to Monsters vs Aliens by Men In Black" << "\n";
-            cout << "Here you could check how at risk you are of getting abducted by aliens" << "\n";
+            std::vector<std::string> row;
+            std::stringstream ss(line);
+            std::string cell;
 
-            cout << "Make a selection:" << "\n";
-            cout << "1. Find out how at risk a certain coordinate is of being abducted by aliens" << "\n";
-            cout << "2. Exit" << "\n";
+            int index = 0;
 
-            cout << "Make a selection: ";
+            while (std::getline(ss, cell, ',')) {
 
-            string selection;
+                if (index == 4) row.push_back(cell);
+                else if (index == 5) {
+                    row.push_back(cell.substr(0, cell.size()-2));
+                }
 
-            cin >> selection;
+                index ++;
+            }
 
-            int num_selection = stoi(selection);
-
-            if (num_selection == 1) {
-
-                string latStr;
-                string longstr;
-
-                cout << "Input latitude: ";
-                cin >> latStr;
-                cout << "Input longitude: ";
-                cin >> longstr;
-
-                double latitude = stod(latStr);
-                double longitude = stod(longstr);
-
-                pair<double, double> userCords = {latitude, longitude};
-
-                auto graphStart = chrono::high_resolution_clock::now();
-
-                vector<pair<double, double>> abductionsInAreaGraph = myGraph->getAbductionCount(userCords);
-
-                auto graphEnd = chrono::high_resolution_clock::now();
-                auto graphDuration = duration_cast<chrono::microseconds>(graphEnd - graphStart);
-
-                cout << "Abductions in your area: ";
-                cout << abductionsInAreaGraph.size();
-                cout << "\n" << "Graph took " << graphDuration.count() << " microseconds" << "\n";
-                cout << "\n" << "\n";
-
-            } else if (num_selection == 2) break;
-
+            data.push_back(row);
         }
 
-        cout << "Thank you for visiting" << "\n";
-        cout << "Stay safe from any aliens!!";
-
+//        std::cout << data[1].size() << std::endl;
+//        MyKDTree* KD = new MyKDTree(data);
+//
+//        srand(time(NULL));
+//        //ifstream config("boards/config.cfg");
+//        RenderWindow window(VideoMode(1000, 667), "Men In Black");
+//        sf::Texture t;
+//        t.loadFromFile("/Users/alexruah/PycharmProjects/COP3530/COP3530MenInBlack/background.jpg");
+//        sf::Sprite s(t);
+//        window.setVerticalSyncEnabled(true);
+//        window.clear(Color::Black);
+//        Font input_font;
+//        if (!input_font.loadFromFile("/Users/alexruah/PycharmProjects/COP3530/COP3530MenInBlack/DIGITALDREAMFAT.ttf"))
+//            return EXIT_FAILURE;
+//        Font output_font;
+//        if (!output_font.loadFromFile("/Users/alexruah/PycharmProjects/COP3530/COP3530MenInBlack/arial.ttf"))
+//            return EXIT_FAILURE;
+//        sf::String playerInput1;
+//        sf::String playerInput2;
+//        sf::String output;
+//        sf::Text playerText1("Latitude", input_font, 24);
+//        sf::Text playerText2("Longitude", input_font, 24);
+//        sf::Text output_text("", output_font, 35);
+//        playerText1.setPosition(357, 281);
+//        playerText2.setPosition(357, 340);
+//        output_text.setPosition(300, 550);
+//        playerText1.setColor(sf::Color::Green);
+//        playerText2.setColor(sf::Color::Green);
+//        output_text.setColor(sf::Color::White);
+//        bool top_or_bottom = true;
+//        int num_sightings = 0;
+//        while (window.isOpen()) {
+//            sf::Event event;
+//
+//            while (window.pollEvent(event)) {
+//
+//                switch (event.type) {
+//                    case sf::Event::Closed:
+//                        window.close();
+//                        cout << "CLOSED" << endl;
+//                        break;
+//                    case Event::MouseButtonPressed:
+//                        //window.close();
+//                        if (Mouse::getPosition(window).x > 357 && Mouse::getPosition(window).x < 457){
+//                            if (Mouse::getPosition(window).y < 305 && Mouse::getPosition(window).y > 281) {
+//                                top_or_bottom = true;
+//                            } else if (Mouse::getPosition(window).y < 375 && Mouse::getPosition(window).y > 347){
+//                                top_or_bottom = false;
+//                            }
+//                        }
+//
+//                        //  cout << "CLOSED" << endl;
+//
+//                        break;
+//                    case sf::Event::TextEntered:
+//                        if((event.text.unicode > 47 && event.text.unicode < 58) || (event.text.unicode > 44 && event.text.unicode < 47)) {
+//                            if (top_or_bottom) {
+//                                playerInput1 += event.text.unicode;
+//                                playerText1.setString(playerInput1);
+//                            } else {
+//                                playerInput2 += event.text.unicode;
+//                                playerText2.setString(playerInput2);
+//                            }
+//                        } else if (event.text.unicode == 10){
+//                            num_sightings = KD->RangeSearch(playerInput1, playerInput2);
+//                            output = "THERE ARE " + std::to_string(num_sightings);
+//                            output_text.setString(output);
+//                        }
+//                }
+//            }
+//            window.draw(s);
+//            window.draw(playerText1);
+//            window.draw(playerText2);
+//            window.draw(output_text);
+//            window.display();
+//            window.clear(Color::Black);
+//        }
+//        cout << KD->RangeSearch("29.6520", "-82.3250") << endl;
+        //Graph* myGraph = new Graph(data);
     }
 
     curl_global_cleanup();
