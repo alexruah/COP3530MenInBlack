@@ -46,9 +46,11 @@ Graph::Graph(std::vector<std::vector<std::string>> abductionList) {
 }
 
 
-int Graph::getAbductionCount(std::pair<double, double> cords) {
+int Graph::getAbductionCount(std::pair<string, string> sCords) {
     // This method goes through every incident and if it finds an incident in the area of the user
     // It then only has to check the incidents it's adjacent to, to find the rest of the incidents
+
+    pair<double, double> cords = {stod(sCords.first), stod(sCords.second)};
 
 
     int res;
