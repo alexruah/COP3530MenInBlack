@@ -1,1 +1,1 @@
-Must download SFML https://www.sfml-dev.org/download.php for this project to work.
+Download SFML https://www.sfml-dev.org/download.php to run this project
